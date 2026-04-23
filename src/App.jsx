@@ -3,7 +3,6 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { 
   Sparkles, 
   Star, 
@@ -201,228 +200,216 @@ export default function App() {
   const { profile, services, portfolio, process } = data;
 
   return (
-    <HelmetProvider>
-      <div className={styles.app}>
-        <Helmet>
-          <meta charSet="utf-8" />
-          <title>{profile.name} | Манікюр</title>
-          <meta name="description" content="Професійний манікюр, нарощування нігтів та дизайн. Запишіться на процедуру до найкращого майстра у вашому місті." />
-          <meta name="keywords" content="манікюр, нарощування нігтів, гель лак, дизайн нігтів, салон краси" />
-          <meta property="og:title" content={`${profile.name} | Естетика ваших нігтів`} />
-          <meta property="og:description" content="Ідеальний манікюр та догляд. Запис онлайн." />
-          <meta property="og:type" content="website" />
-        </Helmet>
+    <div className={styles.app}>
+      <nav className={isScrolled ? styles.nav : styles.navTransparent}>
+        <div className={styles.navContainer}>
+          
+          <button 
+            className="md:hidden text-stone-800 p-2 z-50 relative order-first" 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+          </button>
 
-        <nav className={isScrolled ? styles.nav : styles.navTransparent}>
-          <div className={styles.navContainer}>
-            
-            <button 
-              className="md:hidden text-stone-800 p-2 z-50 relative order-first" 
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              aria-label="Toggle menu"
+          <a href="#" className={styles.logo} onClick={(e) => scrollToSection(e, '#')}>{profile.name}</a>
+          
+          <div className={styles.navLinksDesktop}>
+            {['Послуги', 'Портфоліо', 'Контакти'].map((item, idx) => {
+              const href = idx === 0 ? '#services' : idx === 1 ? '#portfolio' : '#contact';
+              return (
+                <a key={item} href={href} className={styles.navLink} onClick={(e) => scrollToSection(e, href)}>
+                  {item}
+                </a>
+              );
+            })}
+            <Button variant="primary" className="px-6 py-3 text-sm" onClick={(e) => scrollToSection(e, '#contact')}>
+              Записатися
+            </Button>
+          </div>
+
+          <div className="w-10 md:hidden"></div>
+        </div>
+        
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div 
+              initial={{ opacity: 0, height: 0 }} 
+              animate={{ opacity: 1, height: 'auto' }} 
+              exit={{ opacity: 0, height: 0 }} 
+              className="md:hidden bg-white border-b shadow-lg absolute top-full left-0 right-0 overflow-hidden z-40"
             >
-              {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
-            </button>
+              <div className="flex flex-col p-6 gap-4 bg-white">
+                {['Послуги', 'Портфоліо', 'Контакти'].map((item, idx) => {
+                   const href = idx === 0 ? '#services' : idx === 1 ? '#portfolio' : '#contact';
+                   return (
+                    <a 
+                      key={item} 
+                      href={href} 
+                      className="text-xl font-medium text-stone-700 py-2 border-b border-stone-100 last:border-0 active:text-rose-400"
+                      onClick={(e) => scrollToSection(e, href)}
+                    >
+                      {item}
+                    </a>
+                   )
+                })}
+                <div className="pt-4">
+                  <Button variant="primary" className="w-full justify-center" onClick={(e) => scrollToSection(e, '#contact')}>
+                    Записатися онлайн
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </nav>
 
-            <a href="#" className={styles.logo} onClick={(e) => scrollToSection(e, '#')}>{profile.name}</a>
-            
-            <div className={styles.navLinksDesktop}>
-              {['Послуги', 'Портфоліо', 'Контакти'].map((item, idx) => {
-                const href = idx === 0 ? '#services' : idx === 1 ? '#portfolio' : '#contact';
-                return (
-                  <a key={item} href={href} className={styles.navLink} onClick={(e) => scrollToSection(e, href)}>
-                    {item}
-                  </a>
-                );
-              })}
-              <Button variant="primary" className="px-6 py-3 text-sm" onClick={(e) => scrollToSection(e, '#contact')}>
-                Записатися
+      <main>
+        <section id="hero" className={styles.heroSection}>
+          <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-bl from-rose-50 to-transparent -z-10 rounded-bl-[100px]" />
+          <div className={styles.heroGrid}>
+            <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }}>
+              <h1 className={styles.heroTitle}>
+                Естетика ваших <br/>
+                <span className={styles.heroAccent}>нігтів</span>
+              </h1>
+              <p className={styles.heroDesc}>
+                Створюю ідеальний манікюр, який підкреслює вашу індивідуальність.
+              </p>
+              <div className="flex flex-wrap gap-6">
+                <Button onClick={(e) => scrollToSection(e, '#contact')}>Записатися онлайн</Button>
+                <Button variant="outline" onClick={(e) => scrollToSection(e, '#portfolio')}>Мої роботи</Button>
+              </div>
+            </motion.div>
+            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }} className="relative hidden md:block">
+              <div className={styles.heroImageWrapper}>
+                 <img src="https://images.unsplash.com/photo-1632345031435-8727f6897d53?auto=format&fit=crop&q=80&w=800" alt="Hero" className="w-full h-full object-cover" />
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        <section id="services" className={styles.servicesSection}>
+          <div className={styles.container}>
+            <SectionTitle subtitle="Прайс" title="Мої послуги" />
+            <div className={styles.servicesGrid}>
+              {services.map((service) => (
+                <motion.div key={service.id} whileHover={{ y: -10 }} className={styles.serviceCard}>
+                  <div className={styles.serviceIconBox}>
+                    {service.id === 1 ? <Sparkles size={32} /> : service.id === 2 ? <Scissors size={32} /> : <Star size={32} />}
+                  </div>
+                  <h3 className="text-2xl font-bold text-stone-800 mb-4">{service.title}</h3>
+                  <p className="text-stone-600 mb-8 leading-relaxed text-lg">{service.description}</p>
+                  <div className="pt-8 border-t border-stone-100">
+                    <span className="font-semibold text-stone-800 text-2xl">{service.price}</span>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="portfolio" className={styles.portfolioSection}>
+          <div className={styles.container}>
+            <SectionTitle subtitle="Галерея" title="Портфоліо" />
+            <div className={styles.portfolioGrid}>
+              {portfolio.map((src, index) => (
+                <motion.div key={index} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }} className={styles.portfolioItem}>
+                  <img src={src} alt={`Work ${index + 1}`} className={styles.portfolioImg} />
+                </motion.div>
+              ))}
+            </div>
+            <div className="text-center mt-16">
+              <Button variant="outline" onClick={() => window.open(profile.instagram, '_blank')}>
+                Більше робіт в Instagram <InstagramIcon className="ml-2 w-5 h-5" />
               </Button>
             </div>
-
-            <div className="w-10 md:hidden"></div>
           </div>
-          
-          <AnimatePresence>
-            {isMobileMenuOpen && (
-              <motion.div 
-                initial={{ opacity: 0, height: 0 }} 
-                animate={{ opacity: 1, height: 'auto' }} 
-                exit={{ opacity: 0, height: 0 }} 
-                className="md:hidden bg-white border-b shadow-lg absolute top-full left-0 right-0 overflow-hidden z-40"
-              >
-                <div className="flex flex-col p-6 gap-4 bg-white">
-                  {['Послуги', 'Портфоліо', 'Контакти'].map((item, idx) => {
-                     const href = idx === 0 ? '#services' : idx === 1 ? '#portfolio' : '#contact';
-                     return (
-                      <a 
-                        key={item} 
-                        href={href} 
-                        className="text-xl font-medium text-stone-700 py-2 border-b border-stone-100 last:border-0 active:text-rose-400"
-                        onClick={(e) => scrollToSection(e, href)}
-                      >
-                        {item}
-                      </a>
-                     )
-                  })}
-                  <div className="pt-4">
-                    <Button variant="primary" className="w-full justify-center" onClick={(e) => scrollToSection(e, '#contact')}>
-                      Записатися онлайн
-                    </Button>
-                  </div>
+        </section>
+
+        <section id="process" className={styles.processSection}>
+          <div className={styles.container}>
+            <SectionTitle subtitle="Етапи" title="Як я працюю" />
+            <div className={styles.processGrid}>
+              <div className="hidden md:block absolute top-14 left-0 w-full h-0.5 bg-rose-100 -z-10" />
+              {process.map((step, index) => (
+                <div key={index} className="relative pt-4 md:pt-0 text-center md:text-left">
+                  <div className={styles.processStepNum}>{index + 1}</div>
+                  <h3 className="text-2xl font-bold text-stone-800 mb-4">{step.step}</h3>
+                  <p className="text-stone-600 text-lg leading-relaxed">{step.desc}</p>
                 </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </nav>
-
-        <main>
-          <section id="hero" className={styles.heroSection}>
-            <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-bl from-rose-50 to-transparent -z-10 rounded-bl-[100px]" />
-            <div className={styles.heroGrid}>
-              <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }}>
-                <h1 className={styles.heroTitle}>
-                  Естетика ваших <br/>
-                  <span className={styles.heroAccent}>нігтів</span>
-                </h1>
-                <p className={styles.heroDesc}>
-                  Створюю ідеальний манікюр, який підкреслює вашу індивідуальність.
-                </p>
-                <div className="flex flex-wrap gap-6">
-                  <Button onClick={(e) => scrollToSection(e, '#contact')}>Записатися онлайн</Button>
-                  <Button variant="outline" onClick={(e) => scrollToSection(e, '#portfolio')}>Мої роботи</Button>
-                </div>
-              </motion.div>
-              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }} className="relative hidden md:block">
-                <div className={styles.heroImageWrapper}>
-                   <img src="https://images.unsplash.com/photo-1632345031435-8727f6897d53?auto=format&fit=crop&q=80&w=800" alt="Hero" className="w-full h-full object-cover" />
-                </div>
-              </motion.div>
+              ))}
             </div>
-          </section>
-
-          <section id="services" className={styles.servicesSection}>
-            <div className={styles.container}>
-              <SectionTitle subtitle="Прайс" title="Мої послуги" />
-              <div className={styles.servicesGrid}>
-                {services.map((service) => (
-                  <motion.div key={service.id} whileHover={{ y: -10 }} className={styles.serviceCard}>
-                    <div className={styles.serviceIconBox}>
-                      {service.id === 1 ? <Sparkles size={32} /> : service.id === 2 ? <Scissors size={32} /> : <Star size={32} />}
-                    </div>
-                    <h3 className="text-2xl font-bold text-stone-800 mb-4">{service.title}</h3>
-                    <p className="text-stone-600 mb-8 leading-relaxed text-lg">{service.description}</p>
-                    <div className="pt-8 border-t border-stone-100">
-                      <span className="font-semibold text-stone-800 text-2xl">{service.price}</span>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          <section id="portfolio" className={styles.portfolioSection}>
-            <div className={styles.container}>
-              <SectionTitle subtitle="Галерея" title="Портфоліо" />
-              <div className={styles.portfolioGrid}>
-                {portfolio.map((src, index) => (
-                  <motion.div key={index} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }} className={styles.portfolioItem}>
-                    <img src={src} alt={`Work ${index + 1}`} className={styles.portfolioImg} />
-                  </motion.div>
-                ))}
-              </div>
-              <div className="text-center mt-16">
-                <Button variant="outline" onClick={() => window.open(profile.instagram, '_blank')}>
-                  Більше робіт в Instagram <InstagramIcon className="ml-2 w-5 h-5" />
-                </Button>
-              </div>
-            </div>
-          </section>
-
-          <section id="process" className={styles.processSection}>
-            <div className={styles.container}>
-              <SectionTitle subtitle="Етапи" title="Як я працюю" />
-              <div className={styles.processGrid}>
-                <div className="hidden md:block absolute top-14 left-0 w-full h-0.5 bg-rose-100 -z-10" />
-                {process.map((step, index) => (
-                  <div key={index} className="relative pt-4 md:pt-0 text-center md:text-left">
-                    <div className={styles.processStepNum}>{index + 1}</div>
-                    <h3 className="text-2xl font-bold text-stone-800 mb-4">{step.step}</h3>
-                    <p className="text-stone-600 text-lg leading-relaxed">{step.desc}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          <section id="contact" className={styles.contactSection}>
-            <div className={styles.container}>
-              <div className={styles.contactCard}>
-                <div className={styles.contactInfoSide}>
-                  <div className="relative z-10">
-                    <h3 className="text-4xl font-serif mb-8">Контакти</h3>
-                    <p className="text-rose-100 mb-16 text-lg">Запишіться на процедуру зручним для вас способом.</p>
-                    <div className="space-y-8">
-                      <div className="flex items-center gap-6 text-lg"><Phone className="w-6 h-6" /><span>{profile.phone}</span></div>
-                      <div className="flex items-center gap-6 text-lg"><Mail className="w-6 h-6" /><span>{profile.email}</span></div>
-                      <div className="flex items-center gap-6 text-lg"><MapPin className="w-6 h-6" /><span>{profile.address}</span></div>
-                    </div>
-                  </div>
-                  <div className="absolute -bottom-32 -right-32 w-80 h-80 bg-rose-500 rounded-full opacity-50 blur-3xl" />
-                </div>
-
-                <div className={styles.contactFormSide}>
-                  <Formik
-                    initialValues={{ name: '', phone: '', service: '' }}
-                    validationSchema={ContactSchema}
-                    onSubmit={(values, { setSubmitting, resetForm }) => {
-                      setTimeout(() => {
-                        alert(`Дякую, ${values.name}! Заявка прийнята.`);
-                        resetForm();
-                        setSubmitting(false);
-                      }, 1500);
-                    }}
-                  >
-                    {({ errors, touched, isSubmitting }) => (
-                      <Form className="space-y-8">
-                        <div>
-                          <label className="block text-base font-medium text-stone-700 mb-3">Ваше ім'я</label>
-                          <Field name="name" className={`${styles.input} ${errors.name && touched.name ? 'border-red-500' : ''}`} placeholder="Анна" />
-                          <ErrorMessage name="name" component="div" className="text-red-500 text-sm mt-2" />
-                        </div>
-                        <div>
-                          <label className="block text-base font-medium text-stone-700 mb-3">Телефон</label>
-                          <Field name="phone" className={`${styles.input} ${errors.phone && touched.phone ? 'border-red-500' : ''}`} placeholder="+380..." />
-                          <ErrorMessage name="phone" component="div" className="text-red-500 text-sm mt-2" />
-                        </div>
-                        <div>
-                          <label className="block text-base font-medium text-stone-700 mb-3">Послуга</label>
-                          <Field as="select" name="service" className={`${styles.input} ${errors.service && touched.service ? 'border-red-500' : ''}`}>
-                            <option value="">Оберіть послугу</option>
-                            {services.map(s => <option key={s.id} value={s.title}>{s.title}</option>)}
-                          </Field>
-                          <ErrorMessage name="service" component="div" className="text-red-500 text-sm mt-2" />
-                        </div>
-                        <Button type="submit" className="w-full" disabled={isSubmitting}>
-                          {isSubmitting ? <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Надсилання...</> : 'Записатися'}
-                        </Button>
-                      </Form>
-                    )}
-                  </Formik>
-                </div>
-              </div>
-            </div>
-          </section>
-        </main>
-
-        <footer className={styles.footer}>
-          <div className={styles.footerContainer}>
-            <div className="text-3xl font-serif font-bold text-white">{profile.name}</div>
-            <div className="text-base">Всі права захищено</div>
           </div>
-        </footer>
-      </div>
-    </HelmetProvider>
+        </section>
+
+        <section id="contact" className={styles.contactSection}>
+          <div className={styles.container}>
+            <div className={styles.contactCard}>
+              <div className={styles.contactInfoSide}>
+                <div className="relative z-10">
+                  <h3 className="text-4xl font-serif mb-8">Контакти</h3>
+                  <p className="text-rose-100 mb-16 text-lg">Запишіться на процедуру зручним для вас способом.</p>
+                  <div className="space-y-8">
+                    <div className="flex items-center gap-6 text-lg"><Phone className="w-6 h-6" /><span>{profile.phone}</span></div>
+                    <div className="flex items-center gap-6 text-lg"><Mail className="w-6 h-6" /><span>{profile.email}</span></div>
+                    <div className="flex items-center gap-6 text-lg"><MapPin className="w-6 h-6" /><span>{profile.address}</span></div>
+                  </div>
+                </div>
+                <div className="absolute -bottom-32 -right-32 w-80 h-80 bg-rose-500 rounded-full opacity-50 blur-3xl" />
+              </div>
+
+              <div className={styles.contactFormSide}>
+                <Formik
+                  initialValues={{ name: '', phone: '', service: '' }}
+                  validationSchema={ContactSchema}
+                  onSubmit={(values, { setSubmitting, resetForm }) => {
+                    setTimeout(() => {
+                      alert(`Дякую, ${values.name}! Заявка прийнята.`);
+                      resetForm();
+                      setSubmitting(false);
+                    }, 1500);
+                  }}
+                >
+                  {({ errors, touched, isSubmitting }) => (
+                    <Form className="space-y-8">
+                      <div>
+                        <label className="block text-base font-medium text-stone-700 mb-3">Ваше ім'я</label>
+                        <Field name="name" className={`${styles.input} ${errors.name && touched.name ? 'border-red-500' : ''}`} placeholder="Анна" />
+                        <ErrorMessage name="name" component="div" className="text-red-500 text-sm mt-2" />
+                      </div>
+                      <div>
+                        <label className="block text-base font-medium text-stone-700 mb-3">Телефон</label>
+                        <Field name="phone" className={`${styles.input} ${errors.phone && touched.phone ? 'border-red-500' : ''}`} placeholder="+380..." />
+                        <ErrorMessage name="phone" component="div" className="text-red-500 text-sm mt-2" />
+                      </div>
+                      <div>
+                        <label className="block text-base font-medium text-stone-700 mb-3">Послуга</label>
+                        <Field as="select" name="service" className={`${styles.input} ${errors.service && touched.service ? 'border-red-500' : ''}`}>
+                          <option value="">Оберіть послугу</option>
+                          {services.map(s => <option key={s.id} value={s.title}>{s.title}</option>)}
+                        </Field>
+                        <ErrorMessage name="service" component="div" className="text-red-500 text-sm mt-2" />
+                      </div>
+                      <Button type="submit" className="w-full" disabled={isSubmitting}>
+                        {isSubmitting ? <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Надсилання...</> : 'Записатися'}
+                      </Button>
+                    </Form>
+                  )}
+                </Formik>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer className={styles.footer}>
+        <div className={styles.footerContainer}>
+          <div className="text-3xl font-serif font-bold text-white">{profile.name}</div>
+          <div className="text-base">Всі права захищено</div>
+        </div>
+      </footer>
+    </div>
   );
 }
 
