@@ -190,6 +190,13 @@ export default function App() {
     label: s.title
   }));
 
+  const Logo = () => (
+    <div className={styles.logoWrapper}>
+      <Sparkles className={styles.logoIcon} />
+      <span>{profile.name}</span>
+    </div>
+  );
+
   return (
     <div className={styles.app}>
       <nav className={isScrolled ? `${styles.nav} ${styles.navScrolled}` : styles.nav}>
@@ -203,10 +210,12 @@ export default function App() {
             {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
 
-          <a href="#" className={styles.logo} onClick={(e) => scrollToSection(e, '#')}>{profile.name}</a>
+          <a href="#" className={styles.logoLink} onClick={(e) => scrollToSection(e, '#')}>
+            <Logo />
+          </a>
           
           <div className={styles.navLinksDesktop}>
-            {['Послуги', 'Портфоліо', 'Контакти'].map((item, idx) => {
+            {["Послуги", "Портфоліо", "Зв'язатися"].map((item, idx) => {
               const href = idx === 0 ? '#services' : idx === 1 ? '#portfolio' : '#contact';
               return (
                 <a key={item} href={href} className={styles.navLink} onClick={(e) => scrollToSection(e, href)}>
@@ -230,7 +239,7 @@ export default function App() {
               exit={{ opacity: 0, y: -20 }}
               className={styles.mobileMenuOverlay}
             >
-               {['Послуги', 'Портфоліо', 'Контакти'].map((item, idx) => {
+               {["Послуги", "Портфоліо", "Зв'язатися"].map((item, idx) => {
                   const href = idx === 0 ? '#services' : idx === 1 ? '#portfolio' : '#contact';
                   return (
                     <a key={item} href={href} className={styles.navLink} style={{ fontSize: '1.5rem' }} onClick={(e) => scrollToSection(e, href)}>
@@ -268,7 +277,7 @@ export default function App() {
 
         <section id="services" className={`${styles.section} ${styles.sectionBgPink}`}>
           <div className={styles.container}>
-            <SectionTitle subtitle="Прайс" title="Мої послуги" />
+            <SectionTitle subtitle="Ціни" title="Мої послуги" />
             <div className={styles.servicesGrid}>
               {services.map((service) => (
                 <motion.div key={service.id} whileHover={{ y: -10 }} className={styles.serviceCard}>
@@ -298,7 +307,7 @@ export default function App() {
             </div>
             <div className={styles.portfolioMore}>
               <Button variant="outline" onClick={() => window.open(profile.instagram, '_blank')}>
-                Більше робіт в Instagram <InstagramIcon className="ml-2 w-5 h-5" />
+                Більше робіт в Instagram 
               </Button>
             </div>
           </div>
@@ -324,7 +333,10 @@ export default function App() {
             <div className={styles.contactCard}>
               <div className={styles.contactInfoSide}>
                 <div className="relative z-10">
-                  <h3 className={`${styles.contactTitle} ${styles.fontSerif}`}>Контакти</h3>
+                  <div className={styles.contactHeader}>
+                     <Logo />
+                  </div>
+                  <h3 className={`${styles.contactTitle} ${styles.fontSerif}`}>Зв'язатися</h3>
                   <p className={styles.contactDesc}>Запишіться на процедуру зручним для вас способом.</p>
                   <div className={styles.contactDetails}>
                     <div className={styles.contactItem}><Phone className="w-6 h-6" /><span>{profile.phone}</span></div>
@@ -353,7 +365,7 @@ export default function App() {
                         field={formikProps.getFieldProps('name')} 
                         form={formikProps}
                         label="Ваше ім'я" 
-                        placeholder="Анна" 
+                        placeholder="Ольга" 
                       />
                       
                       <CustomInput 
@@ -384,7 +396,9 @@ export default function App() {
 
       <footer className={styles.footer}>
         <div className={styles.footerContainer}>
-          <div className={`${styles.footerLogo} ${styles.fontSerif}`}>{profile.name}</div>
+          <div className={styles.footerLogoWrapper}>
+             <Logo />
+          </div>
           <div className={styles.footerCopy}>Всі права захищено</div>
         </div>
       </footer>
