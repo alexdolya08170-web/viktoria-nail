@@ -225,7 +225,7 @@ export default function App() {
             className="px-6 py-3 text-sm" 
             onClick={(e) => scrollToSection(e, '#contact')}
           >
-            Записатися
+            Записатися онлайн
           </Button>
         </div>
 
