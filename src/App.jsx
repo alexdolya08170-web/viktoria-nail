@@ -204,7 +204,7 @@ export default function App() {
           
           <div className={styles.navLinksDesktop}>
         
-          {["Послуги", "Портфоліо"].map((item) => {
+          {["Послуги", "Мої роботи"].map((item) => {
           
             const href = item === "Послуги" ? "#services" : "#portfolio";
             
@@ -277,7 +277,7 @@ export default function App() {
 
         <section id="portfolio" className={`${styles.section} ${styles.sectionBgWhite}`}>
           <div className={styles.container}>
-            <SectionTitle subtitle="Галерея" title="Портфоліо" />
+            <SectionTitle subtitle="Галерея" title="Мої роботи" />
             <div className={styles.portfolioGrid}>
               {portfolio.map((src, index) => (
                 <motion.div key={index} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }} className={styles.portfolioItem}>
